@@ -1,0 +1,73 @@
+•	cd frontend
+npm create vite@latest .
+npm install @apollo/client graphql
+npm install -D typescript
+•	src/api/graphqlClient.ts:
+•	import { ApolloClient, InMemoryCache } from '@apollo/client';
+
+export const client = new ApolloClient({
+  uri: 'http://localhost:4000/graphql',
+  cache: new InMemoryCache(),
+});
+•	src/components/RankingForm.tsx:
+•	import React, { useState } from 'react';
+import { useLazyQuery, gql } from '@apollo/client';
+
+const GET_RANKING = gql`
+  query GetRanking($city: String!) {
+    getRanking(city: $city) {
+      date
+      scores {
+        activity
+        score
+      }
+    }
+  }
+`;
+
+export const RankingForm: React.FC = () => {
+  const [city, setCity] = useState('');
+  const [getRanking, { data, loading }] = useLazyQuery(GET_RANKING);
+
+  return (
+    <div>
+      <input
+        value={city}
+        onChange={(e) => setCity(e.target.value)}
+        placeholder="Enter city"
+      />
+      <button onClick={() => getRanking({ variables: { city } })}>
+        Get Ranking
+      </button>
+
+      {loading && <p>Loading...</p>}
+
+      {data?.getRanking.map((day: any) => (
+        <div key={day.date}>
+          <h3>{day.date}</h3>
+          <ul>
+            {day.scores.map((score: any) => (
+              <li key={score.activity}>{score.activity}: {score.score}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+};
+•	src/App.tsx:
+•	import React from 'react';
+import { ApolloProvider } from '@apollo/client';
+import { client } from './api/graphqlClient';
+import { RankingForm } from './components/RankingForm';
+
+const App: React.FC = () => {
+  return (
+    <ApolloProvider client={client}>
+      <h1>Weather Activity Ranking</h1>
+      <RankingForm />
+    </ApolloProvider>
+  );
+};
+
+export default App;
