@@ -1,0 +1,24 @@
+•	Project Structure
+•	weather-ranking-app/
+├─ backend/
+│  ├─ src/
+│  │  ├─ index.ts           # Server entry point
+│  │  ├─ schema.ts          # GraphQL schema
+│  │  ├─ resolvers.ts       # GraphQL resolvers
+│  │  ├─ services/
+│  │  │  └─ weatherService.ts  # Open-Meteo API integration
+│  │  └─ utils/
+│  │     └─ rankActivities.ts  # Logic to rank activities
+│  ├─ package.json
+│  └─ tsconfig.json
+├─ frontend/
+│  ├─ src/
+│  │  ├─ App.tsx
+│  │  ├─ components/
+│  │  │  └─ RankingForm.tsx
+│  │  └─ api/
+│  │     └─ graphqlClient.ts
+│  ├─ package.json
+│  └─ tsconfig.json
+├─ README.md
+└─ .gitignore
